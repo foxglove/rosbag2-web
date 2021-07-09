@@ -27,7 +27,7 @@ export async function openFileSystemDirectoryHandle(
 ): Promise<Rosbag2> {
   const files = await listFilesInDirectoryHandle(folder);
   const entries = files.map((file) => ({
-    relativePath: file.webkitRelativePath,
+    relativePath: file.name,
     file: new BlobReader(file),
   }));
   const bag = new Rosbag2(
