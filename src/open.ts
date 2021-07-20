@@ -1,11 +1,11 @@
 import { Rosbag2 } from "@foxglove/rosbag2";
 
 import { BlobReader } from "./BlobReader";
-import { SqliteSqljs } from "./SqliteSqljs";
+import { LocateWasmUrl, SqliteSqljs } from "./SqliteSqljs";
 
 export async function openFileSystemDirectoryEntry(
   folder: FileSystemDirectoryEntry,
-  locateSqlJsWasm?: (file: string) => string,
+  sqlJsWasm?: LocateWasmUrl | ArrayBuffer,
 ): Promise<Rosbag2> {
   const files = await listFilesInDirectoryEntry(folder);
   const entries = files.map((file) => ({
@@ -15,7 +15,7 @@ export async function openFileSystemDirectoryEntry(
   const bag = new Rosbag2(
     folder.fullPath,
     entries,
-    (fileEntry) => new SqliteSqljs(fileEntry.file, locateSqlJsWasm),
+    (fileEntry) => new SqliteSqljs(fileEntry.file, sqlJsWasm),
   );
   await bag.open();
   return bag;
@@ -23,7 +23,7 @@ export async function openFileSystemDirectoryEntry(
 
 export async function openFileSystemDirectoryHandle(
   folder: FileSystemDirectoryHandle,
-  locateSqlJsWasm?: (file: string) => string,
+  sqlJsWasm?: LocateWasmUrl | ArrayBuffer,
 ): Promise<Rosbag2> {
   const files = await listFilesInDirectoryHandle(folder);
   const entries = files.map((file) => ({
@@ -33,7 +33,7 @@ export async function openFileSystemDirectoryHandle(
   const bag = new Rosbag2(
     folder.name,
     entries,
-    (fileEntry) => new SqliteSqljs(fileEntry.file, locateSqlJsWasm),
+    (fileEntry) => new SqliteSqljs(fileEntry.file, sqlJsWasm),
   );
   await bag.open();
   return bag;

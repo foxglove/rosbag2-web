@@ -11,6 +11,8 @@ import {
 import { Time, fromNanoSec, toNanoSec } from "@foxglove/rostime";
 import initSqlJs, { Database, Statement } from "sql.js";
 
+export type LocateWasmUrl = (url: string, scriptDirectory: string) => string;
+
 type DbContext = {
   db: Database;
   idToTopic: Map<bigint, TopicDefinition>;
@@ -26,8 +28,6 @@ type TopicRowArray = [
 ];
 
 type MessageRowArray = [topic_id: number, timestamp: string, data: Uint8Array];
-
-type LocateWasmUrl = (url: string, scriptDirectory: string) => string;
 
 export class SqliteSqljs implements SqliteDb {
   readonly file: Readonly<Filelike>;
