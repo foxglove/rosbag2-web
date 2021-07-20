@@ -56,12 +56,12 @@ async function listFilesInDirectoryEntry(folder: FileSystemDirectoryEntry): Prom
   return files;
 }
 
-function getFolderEntries(folder: FileSystemDirectoryEntry): Promise<FileSystemEntry[]> {
-  return new Promise((resolve, reject) => folder.createReader().readEntries(resolve, reject));
+async function getFolderEntries(folder: FileSystemDirectoryEntry): Promise<FileSystemEntry[]> {
+  return await new Promise((resolve, reject) => folder.createReader().readEntries(resolve, reject));
 }
 
-function getFile(fileEntry: FileSystemFileEntry): Promise<File> {
-  return new Promise((resolve, reject) => fileEntry.file(resolve, reject));
+async function getFile(fileEntry: FileSystemFileEntry): Promise<File> {
+  return await new Promise((resolve, reject) => fileEntry.file(resolve, reject));
 }
 
 // FileSystemDirectoryHandle helpers

@@ -51,6 +51,12 @@ export class SqliteSqljs implements SqliteDb {
     const SQL = await initSqlJs(initOpts);
 
     const data = await this.file.read();
+    if (data.length < 512) {
+      const size = await this.file.size();
+      throw new Error(
+        `Did not read a valid Sqlite3 file. Reported size is ${size}, read ${data.length} bytes`,
+      );
+    }
     const db = new SQL.Database(new Uint8Array(data));
 
     // Retrieve all of the topics
@@ -69,7 +75,6 @@ export class SqliteSqljs implements SqliteDb {
     }
 
     this.context = { db, idToTopic, topicNameToId };
-    return Promise.resolve();
   }
 
   async close(): Promise<void> {
@@ -80,11 +85,11 @@ export class SqliteSqljs implements SqliteDb {
     await this.file.close();
   }
 
-  readTopics(): Promise<TopicDefinition[]> {
+  async readTopics(): Promise<TopicDefinition[]> {
     if (this.context == undefined) {
       throw new Error(`Call open() before reading topics`);
     }
-    return Promise.resolve(Array.from(this.context.idToTopic.values()));
+    return Array.from(this.context.idToTopic.values());
   }
 
   readMessages(opts: MessageReadOptions = {}): AsyncIterableIterator<RawMessage> {
@@ -147,7 +152,7 @@ export class SqliteSqljs implements SqliteDb {
     return new RawMessageIterator(dbIterator, this.context.idToTopic);
   }
 
-  timeRange(): Promise<[min: Time, max: Time]> {
+  async timeRange(): Promise<[min: Time, max: Time]> {
     if (this.context == undefined) {
       throw new Error(`Call open() before retrieving the time range`);
     }
@@ -157,10 +162,10 @@ export class SqliteSqljs implements SqliteDb {
       "select cast(min(timestamp) as TEXT), cast(max(timestamp) as TEXT) from messages",
     )[0]?.values[0] ?? ["0", "0"];
     const [minNsec, maxNsec] = res as [string, string];
-    return Promise.resolve([fromNanoSec(BigInt(minNsec)), fromNanoSec(BigInt(maxNsec))]);
+    return [fromNanoSec(BigInt(minNsec)), fromNanoSec(BigInt(maxNsec))];
   }
 
-  messageCounts(): Promise<Map<string, number>> {
+  async messageCounts(): Promise<Map<string, number>> {
     if (this.context == undefined) {
       throw new Error(`Call open() before retrieving message counts`);
     }
@@ -176,7 +181,7 @@ export class SqliteSqljs implements SqliteDb {
     for (const [topicName, count] of rows) {
       counts.set(topicName as string, count as number);
     }
-    return Promise.resolve(counts);
+    return counts;
   }
 }
 

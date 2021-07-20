@@ -9,11 +9,8 @@ export class BlobReader implements Filelike {
     this.size_ = blob.size;
   }
 
-  read(offset?: number, length?: number): Promise<Uint8Array> {
-    return new Promise((resolve, reject) => {
-      offset ??= 0;
-      length ??= Math.max(0, this.size_ - offset);
-
+  async read(offset = 0, length = Math.max(0, this.size_ - offset)): Promise<Uint8Array> {
+    return await new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = function () {
         reader.onload = null;
@@ -29,8 +26,8 @@ export class BlobReader implements Filelike {
     });
   }
 
-  readAsText(): Promise<string> {
-    return new Promise((resolve, reject) => {
+  async readAsText(): Promise<string> {
+    return await new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = function () {
         reader.onload = null;
@@ -46,11 +43,11 @@ export class BlobReader implements Filelike {
     });
   }
 
-  size(): Promise<number> {
-    return Promise.resolve(this.size_);
+  async size(): Promise<number> {
+    return this.size_;
   }
 
-  close(): Promise<void> {
-    return Promise.resolve();
+  async close(): Promise<void> {
+    // no-op
   }
 }

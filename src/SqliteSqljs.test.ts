@@ -24,10 +24,10 @@ export class FsReader implements Filelike {
     this.buffer_ = new Uint8Array(FsReader.DEFAULT_BUFFER_SIZE);
   }
 
-  async read(offset?: number, length?: number): Promise<Uint8Array> {
+  async read(offset = 0, length?: number): Promise<Uint8Array> {
+    // eslint-disable-next-line no-param-reassign
+    length ??= Math.max(0, ((await this.size()) ?? 0) - offset);
     const handle = this.handle_ ?? (await this.open());
-    offset ??= 0;
-    length ??= Math.max(0, (this.size_ ?? 0) - offset);
 
     if (length > this.buffer_.byteLength) {
       const newSize = Math.max(this.buffer_.byteLength * 2, length);
@@ -41,7 +41,7 @@ export class FsReader implements Filelike {
   }
 
   async readAsText(): Promise<string> {
-    return readFile(this.filename, { encoding: "utf8" });
+    return await readFile(this.filename, { encoding: "utf8" });
   }
 
   async size(): Promise<number> {
