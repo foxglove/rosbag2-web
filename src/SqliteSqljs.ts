@@ -27,18 +27,28 @@ type TopicRowArray = [
 
 type MessageRowArray = [topic_id: number, timestamp: string, data: Uint8Array];
 
+type LocateWasmUrl = (url: string, scriptDirectory: string) => string;
+
 export class SqliteSqljs implements SqliteDb {
   readonly file: Readonly<Filelike>;
-  private locateSqlJsWasm?: (file: string) => string;
+  private sqlJsWasm?: LocateWasmUrl | ArrayBuffer;
   private context?: DbContext;
 
-  constructor(file: Filelike, locateSqlJsWasm?: (file: string) => string) {
+  constructor(file: Filelike, sqlJsWasm?: LocateWasmUrl | ArrayBuffer) {
     this.file = file;
-    this.locateSqlJsWasm = locateSqlJsWasm;
+    this.sqlJsWasm = sqlJsWasm;
   }
 
   async open(): Promise<void> {
-    const SQL = await initSqlJs({ locateFile: this.locateSqlJsWasm });
+    const initOpts: Partial<EmscriptenModule> = {};
+    if (this.sqlJsWasm != undefined) {
+      if (this.sqlJsWasm instanceof ArrayBuffer) {
+        initOpts.wasmBinary = this.sqlJsWasm;
+      } else {
+        initOpts.locateFile = this.sqlJsWasm;
+      }
+    }
+    const SQL = await initSqlJs(initOpts);
 
     const data = await this.file.read();
     const db = new SQL.Database(new Uint8Array(data));

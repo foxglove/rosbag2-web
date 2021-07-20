@@ -80,6 +80,14 @@ describe("SqliteSqljs", () => {
     await db.close();
   });
 
+  it("should open a database using a passed in wasm ArrayBuffer", async () => {
+    const wasmPath = path.join(__dirname, "..", "node_modules", "sql.js", "dist", "sql-wasm.wasm");
+    const wasm = await readFile(wasmPath);
+    const db = new SqliteSqljs(new FsReader(TALKER_DB), wasm);
+    await db.open();
+    await db.close();
+  });
+
   it("should read all topics", async () => {
     const db = new SqliteSqljs(new FsReader(TALKER_DB));
     await db.open();
