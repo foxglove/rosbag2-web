@@ -342,23 +342,23 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@foxglove/cdr@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@foxglove/cdr/-/cdr-1.0.0.tgz#b34e3abf6e52f2dd3ef901f0b98450aca3575448"
-  integrity sha512-5gd9YH8hIENWhXcpUVOKFtlJjgx6BrnsF5+eyIeZ6eMD4Za7tpOyMqemh1yW3scgLHc5/bII27PivoJ7QNxQbw==
+"@foxglove/cdr@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@foxglove/cdr/-/cdr-1.1.1.tgz#c0a77713ba67b2ed6feaf5f64fa8c50fe713534d"
+  integrity sha512-Bv5bjHCh4K3x8OdBvt/0W+EEUIrDlM7+rLj2/LpguUXET51EsBVACCzYRvvZtQdAkJUZxVhuRnI3e8+rISWNcg==
 
 "@foxglove/eslint-plugin@0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@foxglove/eslint-plugin/-/eslint-plugin-0.13.0.tgz#2b92901bc803ea049d1df9dbbf85b29afd861942"
   integrity sha512-thIQmbG2ziu26bRafEQvi5Oik1mAJjimPIcdlpzV8yoyh4t0TOjStQT+8pPKU/mUrcCdmxSx0WI/zPLy99qjFQ==
 
-"@foxglove/rosbag2@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@foxglove/rosbag2/-/rosbag2-1.0.0.tgz#45c9bf35c1747914ff429f5b1120fe93a48a3e9a"
-  integrity sha512-PJFFV/UM2/zLyXUoF7d5CiEwNbc8sTN5ilvrEOWrbd64B0a75JdJwTKESSv4MohoRnHpNNASUY+QFkwf8ETXSQ==
+"@foxglove/rosbag2@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@foxglove/rosbag2/-/rosbag2-1.0.1.tgz#33016dfceb12cee849b9888e2fa8f90311f2f8ed"
+  integrity sha512-YrEeqa+mwEp930ZvIRjkJNHEmouCJJtHQppvXrsWNR1ntOfB16pbKy2zuzuzqCQg5qWxNWyiUBJVgEzwkCxcIg==
   dependencies:
     "@foxglove/rosmsg-msgs-common" "^1.0.0"
-    "@foxglove/rosmsg2-serialization" "^1.0.0"
+    "@foxglove/rosmsg2-serialization" "^1.0.1"
     "@foxglove/rostime" "^1.1.0"
     js-yaml "^4.1.0"
 
@@ -369,12 +369,12 @@
   dependencies:
     "@foxglove/rosmsg" "^0.1.2"
 
-"@foxglove/rosmsg2-serialization@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@foxglove/rosmsg2-serialization/-/rosmsg2-serialization-1.0.0.tgz#6ebaf3dd0094576f4f3ecadc271c63ae5d0857f6"
-  integrity sha512-lbJRZIb8DFfcsedll0OAEsNQYDshNcsca/i0CQ4v1YCmR9nnZ4/FAy4youTn5t9aJ1eJaalJMPEWqkoiGH5VwQ==
+"@foxglove/rosmsg2-serialization@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@foxglove/rosmsg2-serialization/-/rosmsg2-serialization-1.0.1.tgz#40f8cf183a772c49f47f8c564ed1be6f9ae72f14"
+  integrity sha512-HzglKrQ4eCRjKkbslYIS8Ag4gr4i/IwhWUFDjSgr1ey/G8gi6Ef1n3FI5GZMzqoZmkqdDCJZAdDnt3CvTVnO2w==
   dependencies:
-    "@foxglove/cdr" "^1.0.0"
+    "@foxglove/cdr" "^1.1.1"
     "@foxglove/rosmsg" "^1.0.0"
     "@foxglove/rostime" "^1.1.0"
 
