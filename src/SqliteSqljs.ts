@@ -24,7 +24,7 @@ type TopicRowArray = [
   name: string,
   type: string,
   serialization_format: string,
-  offered_qos_profiles: string,
+  offered_qos_profiles?: string,
 ];
 
 type MessageRowArray = [topic_id: number, timestamp: string, data: Uint8Array];
@@ -62,12 +62,10 @@ export class SqliteSqljs implements SqliteDb {
     // Retrieve all of the topics
     const idToTopic = new Map<bigint, TopicDefinition>();
     const topicNameToId = new Map<string, bigint>();
-    const topicRows = (db.exec(
-      "select id,name,type,serialization_format,offered_qos_profiles from topics",
-    )[0]?.values ?? []) as TopicRowArray[];
+    const topicRows = (db.exec("select * from topics")[0]?.values ?? []) as TopicRowArray[];
     for (const row of topicRows) {
       const [id, name, type, serializationFormat, qosProfilesStr] = row;
-      const offeredQosProfiles = parseQosProfiles(qosProfilesStr);
+      const offeredQosProfiles = parseQosProfiles(qosProfilesStr ?? "[]");
       const topic = { name, type, serializationFormat, offeredQosProfiles };
       const bigintId = BigInt(id);
       idToTopic.set(bigintId, topic);
