@@ -4,10 +4,10 @@ import { BlobReader } from "./BlobReader";
 import { LocateWasmUrl, SqliteSqljs } from "./SqliteSqljs";
 
 export async function openFileSystemFile(
-  file: File,
+  file: Blob,
   sqlJsWasm?: LocateWasmUrl | ArrayBuffer,
 ): Promise<Rosbag2> {
-  const entries = [{ relativePath: file.webkitRelativePath, file: new BlobReader(file) }];
+  const entries = [{ relativePath: "bag.db3", file: new BlobReader(file) }];
   const bag = new Rosbag2(entries, (fileEntry) => new SqliteSqljs(fileEntry.file, sqlJsWasm));
   await bag.open();
   return bag;
