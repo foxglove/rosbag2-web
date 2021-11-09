@@ -334,10 +334,10 @@
   resolved "https://registry.yarnpkg.com/@foxglove/eslint-plugin/-/eslint-plugin-0.17.1.tgz#f29fbe7bf538f2721535a9c06ec6ec607ad72f71"
   integrity sha512-/Z32WFj7bBfEIdCh0aXTc5mQbVUcm1KvG586FxCq8k0r0oBUml0bAtLIem9IjE7sUWtabSDJWTFLJpHJhlP+XA==
 
-"@foxglove/rosbag2@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@foxglove/rosbag2/-/rosbag2-2.0.0.tgz#0d4cf6ac4b60b530847f9641ab624a3a1e976ce2"
-  integrity sha512-ms3kNUE3Nf0pgw+mvc9KKWdLjcvzUgxqhoxRwn8dgW9uQ1F6W5bkgm8fjaNv83pzbXIkLFT3jJE7RJgesUMPFA==
+"@foxglove/rosbag2@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@foxglove/rosbag2/-/rosbag2-3.0.0.tgz#a2b5da8c3e58d1942773498656f4ca09408a0b6b"
+  integrity sha512-m502oUKtxZ5QHssPlCPTOHc8E1kAB91Nfa8w5PVJTJNIEVsFtEZvEe6AEAi1ilEErhsIMlT23U/drQN+vRt/lA==
   dependencies:
     "@foxglove/rosmsg-msgs-common" "^1.0.1"
     "@foxglove/rosmsg2-serialization" "^1.0.2"
