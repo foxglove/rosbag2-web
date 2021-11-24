@@ -159,7 +159,7 @@ export class SqliteSqljs implements SqliteDb {
     const res = db.exec(
       "select cast(min(timestamp) as TEXT), cast(max(timestamp) as TEXT) from messages",
     )[0]?.values[0] ?? ["0", "0"];
-    const [minNsec, maxNsec] = res as [string, string];
+    const [minNsec = "0", maxNsec = "0"] = res as [string, string];
     return [fromNanoSec(BigInt(minNsec)), fromNanoSec(BigInt(maxNsec))];
   }
 
