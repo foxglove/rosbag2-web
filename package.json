@@ -62,6 +62,6 @@
   },
   "dependencies": {
     "@foxglove/rosbag2": "^3.0.1",
-    "sql.js": "^1.6.2"
+    "@foxglove/sql.js": "^0.0.1"
   }
 }

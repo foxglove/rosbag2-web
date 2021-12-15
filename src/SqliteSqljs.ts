@@ -9,7 +9,7 @@ import {
   parseQosProfiles,
 } from "@foxglove/rosbag2";
 import { Time, fromNanoSec, toNanoSec } from "@foxglove/rostime";
-import initSqlJs, { Database, Statement } from "sql.js";
+import initSqlJs, { Database, Statement } from "@foxglove/sql.js";
 
 export type LocateWasmUrl = (url: string, scriptDirectory: string) => string;
 
