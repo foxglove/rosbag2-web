@@ -1,103 +1,42 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import {
-  Filelike,
   QosPolicyDurability,
   QosPolicyHistory,
   QosPolicyLiveliness,
   QosPolicyReliability,
 } from "@foxglove/rosbag2";
 import { Time, add as addTimes, isTimeInRangeInclusive } from "@foxglove/rostime";
-import { FileHandle, open as fopen, readFile } from "fs/promises";
+import { readFile } from "fs/promises";
 import path from "path";
 
 import { SqliteSqljs } from "./SqliteSqljs";
-
-export class FsReader implements Filelike {
-  static DEFAULT_BUFFER_SIZE = 1024 * 16;
-
-  readonly filename: string;
-  private size_?: number;
-  private handle_?: FileHandle;
-  private buffer_: Uint8Array;
-
-  constructor(filename: string) {
-    this.filename = filename;
-    this.buffer_ = new Uint8Array(FsReader.DEFAULT_BUFFER_SIZE);
-  }
-
-  async read(offset = 0, length?: number): Promise<Uint8Array> {
-    // eslint-disable-next-line no-param-reassign
-    length ??= Math.max(0, ((await this.size()) ?? 0) - offset);
-    const handle = this.handle_ ?? (await this.open());
-
-    if (length > this.buffer_.byteLength) {
-      const newSize = Math.max(this.buffer_.byteLength * 2, length);
-      this.buffer_ = new Uint8Array(newSize);
-    }
-
-    await handle.read(this.buffer_, 0, length, offset);
-    return this.buffer_.byteLength === length
-      ? this.buffer_
-      : new Uint8Array(this.buffer_.buffer, 0, length);
-  }
-
-  async readAsText(): Promise<string> {
-    return await readFile(this.filename, { encoding: "utf8" });
-  }
-
-  async size(): Promise<number> {
-    if (this.size_ != undefined) {
-      return this.size_;
-    }
-    await this.open();
-    return this.size_ ?? 0;
-  }
-
-  async close(): Promise<void> {
-    if (this.handle_ == undefined) {
-      return;
-    }
-
-    await this.handle_.close();
-    this.size_ = undefined;
-    this.handle_ = undefined;
-  }
-
-  private async open(): Promise<FileHandle> {
-    this.handle_ = await fopen(this.filename, "r");
-    this.size_ = (await this.handle_.stat()).size;
-    return this.handle_;
-  }
-}
 
 const TALKER_DB = path.join(__dirname, "..", "tests", "bags", "talker", "talker.db3");
 const BAG_START: Time = { sec: 1585866235, nsec: 112411371 };
 const BAG_END: Time = { sec: 1585866239, nsec: 643508139 };
 
+async function fileToUint8Array(filePath: string): Promise<Uint8Array> {
+  return new Uint8Array(await readFile(filePath));
+}
+
 describe("SqliteSqljs", () => {
-  it("should open a database", async () => {
-    const db = new SqliteSqljs(new FsReader(TALKER_DB));
-    await db.open();
-    await db.close();
+  beforeAll(async () => {
+    await SqliteSqljs.Initialize();
   });
 
-  it("should open a database using a passed in wasm ArrayBuffer", async () => {
-    const wasmPath = path.join(
-      __dirname,
-      "..",
-      "node_modules",
-      "@foxglove",
-      "sql.js",
-      "dist",
-      "sql-wasm.wasm",
-    );
-    const wasm = await readFile(wasmPath);
-    const db = new SqliteSqljs(new FsReader(TALKER_DB), wasm);
+  it("should open a database", async () => {
+    const data = await fileToUint8Array(TALKER_DB);
+    const db = new SqliteSqljs(data);
     await db.open();
     await db.close();
   });
 
   it("should read all topics", async () => {
-    const db = new SqliteSqljs(new FsReader(TALKER_DB));
+    const data = await fileToUint8Array(TALKER_DB);
+    const db = new SqliteSqljs(data);
     await db.open();
 
     const topics = await db.readTopics();
@@ -152,7 +91,8 @@ describe("SqliteSqljs", () => {
   });
 
   it("should retrieve the bag time range", async () => {
-    const db = new SqliteSqljs(new FsReader(TALKER_DB));
+    const data = await fileToUint8Array(TALKER_DB);
+    const db = new SqliteSqljs(data);
     await db.open();
 
     const [start, end] = await db.timeRange();
@@ -167,7 +107,8 @@ describe("SqliteSqljs", () => {
   });
 
   it("should retrieve message counts", async () => {
-    const db = new SqliteSqljs(new FsReader(TALKER_DB));
+    const data = await fileToUint8Array(TALKER_DB);
+    const db = new SqliteSqljs(data);
     await db.open();
 
     const counts = await db.messageCounts();
@@ -179,7 +120,8 @@ describe("SqliteSqljs", () => {
   });
 
   it("should read all messages", async () => {
-    const db = new SqliteSqljs(new FsReader(TALKER_DB));
+    const data = await fileToUint8Array(TALKER_DB);
+    const db = new SqliteSqljs(data);
     await db.open();
 
     let count = 0;
@@ -197,7 +139,8 @@ describe("SqliteSqljs", () => {
   });
 
   it("should read messages filtered by one topic", async () => {
-    const db = new SqliteSqljs(new FsReader(TALKER_DB));
+    const data = await fileToUint8Array(TALKER_DB);
+    const db = new SqliteSqljs(data);
     await db.open();
 
     let count = 0;
@@ -214,7 +157,8 @@ describe("SqliteSqljs", () => {
   });
 
   it("should read messages filtered by two topics", async () => {
-    const db = new SqliteSqljs(new FsReader(TALKER_DB));
+    const data = await fileToUint8Array(TALKER_DB);
+    const db = new SqliteSqljs(data);
     await db.open();
 
     let count = 0;
@@ -232,7 +176,8 @@ describe("SqliteSqljs", () => {
   });
 
   it("should read messages filtered by start and end", async () => {
-    const db = new SqliteSqljs(new FsReader(TALKER_DB));
+    const data = await fileToUint8Array(TALKER_DB);
+    const db = new SqliteSqljs(data);
     await db.open();
 
     const startTime = addTimes(BAG_START, { sec: 1, nsec: 0 });
@@ -254,7 +199,8 @@ describe("SqliteSqljs", () => {
   });
 
   it("should read messages with topic and timestamp filters", async () => {
-    const db = new SqliteSqljs(new FsReader(TALKER_DB));
+    const data = await fileToUint8Array(TALKER_DB);
+    const db = new SqliteSqljs(data);
     await db.open();
 
     const topics = ["/rosout"];
