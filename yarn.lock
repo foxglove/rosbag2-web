@@ -372,10 +372,10 @@
   resolved "https://registry.yarnpkg.com/@foxglove/rostime/-/rostime-1.1.1.tgz#6d9ec8e2264d7a44fa5066ce38cafed84d3c657a"
   integrity sha512-EI+rNLYRcrMHeyRsDuWjyDuTPwu9ZgQIk28RTsTxq1jO2zYFHuBni3TTC78BluS1QZD/iLxUeiGCfJl4eizB9A==
 
-"@foxglove/sql.js@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@foxglove/sql.js/-/sql.js-0.0.2.tgz#e6faf717594b7ed2a9fcd50a9d50db01f24ca07c"
-  integrity sha512-IOTOMn5EbfRFYgQ+8OzD1QdE9VK7P3PSoD9dHu/bx2A1IwKAIra2X0D+xpLo5S+pBLaLbmsFZCRtRjHeOOZ/9w==
+"@foxglove/sql.js@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@foxglove/sql.js/-/sql.js-0.0.3.tgz#4ba4633a5005fb77b02e363f2a1e07dffae8a8f4"
+  integrity sha512-5frqsp/lCVwSaUmqk6h/0slwPysRvB7ARN3sBA+UBkOgZ78wWpIdAp/kNKGaI/xO5h/psiSrRtFwoyjqF8HboQ==
 
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"
