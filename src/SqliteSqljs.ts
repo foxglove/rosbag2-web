@@ -1,5 +1,4 @@
 import {
-  Filelike,
   MessageReadOptions,
   MessageRow,
   RawMessage,
@@ -9,7 +8,7 @@ import {
   parseQosProfiles,
 } from "@foxglove/rosbag2";
 import { Time, fromNanoSec, toNanoSec } from "@foxglove/rostime";
-import initSqlJs, { Database, Statement } from "sql.js";
+import initSqlJs, { Database, SqlJsStatic, Statement } from "@foxglove/sql.js";
 
 export type LocateWasmUrl = (url: string, scriptDirectory: string) => string;
 
@@ -30,34 +29,40 @@ type TopicRowArray = [
 type MessageRowArray = [topic_id: number, timestamp: string, data: Uint8Array];
 
 export class SqliteSqljs implements SqliteDb {
-  readonly file: Readonly<Filelike>;
-  private sqlJsWasm?: LocateWasmUrl | ArrayBuffer;
+  private file?: Readonly<File>;
+  private data?: Readonly<Uint8Array>;
   private context?: DbContext;
 
-  constructor(file: Filelike, sqlJsWasm?: LocateWasmUrl | ArrayBuffer) {
-    this.file = file;
-    this.sqlJsWasm = sqlJsWasm;
+  private static SqlInitialization?: Promise<SqlJsStatic>;
+
+  static async Initialize(config?: Partial<EmscriptenModule>): Promise<SqlJsStatic> {
+    if (SqliteSqljs.SqlInitialization) {
+      return await SqliteSqljs.SqlInitialization;
+    }
+
+    SqliteSqljs.SqlInitialization = initSqlJs(config);
+    return await SqliteSqljs.SqlInitialization;
+  }
+
+  constructor(data: File | Uint8Array) {
+    if (data instanceof File) {
+      this.file = data;
+    } else if (data instanceof Uint8Array) {
+      this.data = data;
+    }
   }
 
   async open(): Promise<void> {
-    const initOpts: Partial<EmscriptenModule> = {};
-    if (this.sqlJsWasm != undefined) {
-      if (this.sqlJsWasm instanceof ArrayBuffer) {
-        initOpts.wasmBinary = this.sqlJsWasm;
-      } else {
-        initOpts.locateFile = this.sqlJsWasm;
-      }
-    }
-    const SQL = await initSqlJs(initOpts);
+    const SQL = await SqliteSqljs.Initialize();
 
-    const data = await this.file.read();
-    if (data.length < 512) {
-      const size = await this.file.size();
-      throw new Error(
-        `Did not read a valid Sqlite3 file. Reported size is ${size}, read ${data.length} bytes`,
-      );
+    let db: Database;
+    if (this.file) {
+      db = new SQL.Database({ file: this.file });
+    } else if (this.data) {
+      db = new SQL.Database({ data: this.data });
+    } else {
+      db = new SQL.Database();
     }
-    const db = new SQL.Database(new Uint8Array(data));
 
     // Retrieve all of the topics
     const idToTopic = new Map<bigint, TopicDefinition>();
@@ -80,7 +85,6 @@ export class SqliteSqljs implements SqliteDb {
       this.context.db.close();
       this.context = undefined;
     }
-    await this.file.close();
   }
 
   async readTopics(): Promise<TopicDefinition[]> {
