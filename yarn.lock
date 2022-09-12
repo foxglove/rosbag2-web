@@ -530,10 +530,10 @@
     tsutils "^3"
     typescript "^4"
 
-"@foxglove/rosbag2@^4.3.0":
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/@foxglove/rosbag2/-/rosbag2-4.3.0.tgz#37b6168cb89c8f15141077697c3023e1f2bb0e51"
-  integrity sha512-1JXwLFzk5ZUHDpWhm9Wf0UN9ClowD3NJX3wN785nKTXWMsQRSHqdSx73zo3MqReCL+4Cx+5riugYQQu66XppIQ==
+"@foxglove/rosbag2@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@foxglove/rosbag2/-/rosbag2-4.3.1.tgz#1ca10bce6a33135a27838bea2d9f3aef45887cd8"
+  integrity sha512-CKzJ+jKfXbxqcIDLw9laoWAz6UQmfw45MH9cjWdTzGkEpljm0/tf8f88iMEfuyz5msyLKLqMiLpADdkluyIBDQ==
   dependencies:
     "@foxglove/rosmsg-msgs-common" "^2.0.0"
     "@foxglove/rosmsg2-serialization" "^1.0.7"
