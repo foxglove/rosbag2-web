@@ -1,6 +1,6 @@
 # @foxglove/rosbag2-web
 
-> _ROS2 (Robot Operating System) bag reader and writer for the browser 👜_
+> _ROS2 (Robot Operating System) bag reader for the browser 👜_
 
 [![npm version](https://img.shields.io/npm/v/@foxglove/rosbag2-web.svg?style=flat)](https://www.npmjs.com/package/@foxglove/rosbag2-web)
 
