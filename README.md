@@ -1,18 +1,12 @@
 # @foxglove/rosbag2-web
 
-> _ROS2 (Robot Operating System) bag reader for the browser 👜_
+> _ROS 2 (Robot Operating System) bag reader for the browser 👜_
 
 [![npm version](https://img.shields.io/npm/v/@foxglove/rosbag2-web.svg?style=flat)](https://www.npmjs.com/package/@foxglove/rosbag2-web)
 
 ## Introduction
 
-...
-
-## Usage
-
-```Typescript
-...
-```
+`rosbag2-web` enables web browsers to read the contents of ROS 2 SQLite files. It is currently being used in the [Foxglove Studio app](https://studio.foxglove.dev) to support reading data in this legacy file format. This SQLite format has been superseded by [MCAP](https://mcap.dev).
 
 ## License
 
