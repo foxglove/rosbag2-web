@@ -62,7 +62,7 @@
     "typescript": "4.9.5"
   },
   "dependencies": {
-    "@foxglove/rosbag2": "^5.0.0",
+    "@foxglove/rosbag2": "^5.0.1",
     "@foxglove/sql.js": "^0.0.4"
   }
 }
