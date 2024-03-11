@@ -6,7 +6,7 @@
 
 ## Introduction
 
-`rosbag2-web` enables web browsers to read the contents of ROS 2 SQLite files. It is currently being used in the [Foxglove Studio app](https://studio.foxglove.dev) to support reading data in this legacy file format. This SQLite format has been superseded by [MCAP](https://mcap.dev).
+`rosbag2-web` enables web browsers to read the contents of ROS 2 SQLite files. It is used by [Foxglove](https://foxglove.dev) to support reading data in this legacy file format. This SQLite format has been superseded by [MCAP](https://mcap.dev).
 
 ## License
 
