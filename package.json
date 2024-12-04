@@ -1,6 +1,6 @@
 {
   "name": "@foxglove/rosbag2-web",
-  "version": "4.1.1",
+  "version": "5.0.0",
   "description": "ROS2 (Robot Operating System) bag reader and writer for the browser",
   "license": "MIT",
   "keywords": [
@@ -54,7 +54,7 @@
     "typescript": "5.7.2"
   },
   "dependencies": {
-    "@foxglove/rosbag2": "^5.0.1",
+    "@foxglove/rosbag2": "^6.0.0",
     "@foxglove/sql.js": "^0.0.4"
   },
   "packageManager": "yarn@4.5.3"
