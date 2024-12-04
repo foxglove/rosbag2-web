@@ -29,13 +29,17 @@ type TopicRowArray = [
 type MessageRowArray = [topic_id: number, timestamp: string, data: Uint8Array];
 
 export class SqliteSqljs implements SqliteDb {
+  // eslint-disable-next-line @foxglove/prefer-hash-private
   private file?: Readonly<File>;
+  // eslint-disable-next-line @foxglove/prefer-hash-private
   private data?: Readonly<Uint8Array>;
+  // eslint-disable-next-line @foxglove/prefer-hash-private
   private context?: DbContext;
 
+  // eslint-disable-next-line @foxglove/prefer-hash-private
   private static SqlInitialization?: Promise<SqlJsStatic>;
 
-  static async Initialize(config?: Partial<EmscriptenModule>): Promise<SqlJsStatic> {
+  public static async Initialize(config?: Partial<EmscriptenModule>): Promise<SqlJsStatic> {
     if (SqliteSqljs.SqlInitialization) {
       return await SqliteSqljs.SqlInitialization;
     }
@@ -44,7 +48,7 @@ export class SqliteSqljs implements SqliteDb {
     return await SqliteSqljs.SqlInitialization;
   }
 
-  constructor(data: File | Uint8Array) {
+  public constructor(data: File | Uint8Array) {
     if (data instanceof File) {
       this.file = data;
     } else if (data instanceof Uint8Array) {
@@ -52,7 +56,7 @@ export class SqliteSqljs implements SqliteDb {
     }
   }
 
-  async open(): Promise<void> {
+  public async open(): Promise<void> {
     const SQL = await SqliteSqljs.Initialize();
 
     let db: Database;
@@ -80,21 +84,21 @@ export class SqliteSqljs implements SqliteDb {
     this.context = { db, idToTopic, topicNameToId };
   }
 
-  async close(): Promise<void> {
+  public async close(): Promise<void> {
     if (this.context != undefined) {
       this.context.db.close();
       this.context = undefined;
     }
   }
 
-  async readTopics(): Promise<TopicDefinition[]> {
+  public async readTopics(): Promise<TopicDefinition[]> {
     if (this.context == undefined) {
       throw new Error(`Call open() before reading topics`);
     }
     return Array.from(this.context.idToTopic.values());
   }
 
-  readMessages(opts: MessageReadOptions = {}): AsyncIterableIterator<RawMessage> {
+  public readMessages(opts: MessageReadOptions = {}): AsyncIterableIterator<RawMessage> {
     if (this.context == undefined) {
       throw new Error(`Call open() before reading messages`);
     }
@@ -154,7 +158,7 @@ export class SqliteSqljs implements SqliteDb {
     return new RawMessageIterator(dbIterator, this.context.idToTopic);
   }
 
-  async timeRange(): Promise<[min: Time, max: Time]> {
+  public async timeRange(): Promise<[min: Time, max: Time]> {
     if (this.context == undefined) {
       throw new Error(`Call open() before retrieving the time range`);
     }
@@ -167,7 +171,7 @@ export class SqliteSqljs implements SqliteDb {
     return [fromNanoSec(BigInt(minNsec ?? 0n)), fromNanoSec(BigInt(maxNsec ?? 0n))];
   }
 
-  async messageCounts(): Promise<Map<string, number>> {
+  public async messageCounts(): Promise<Map<string, number>> {
     if (this.context == undefined) {
       throw new Error(`Call open() before retrieving message counts`);
     }
@@ -188,17 +192,17 @@ export class SqliteSqljs implements SqliteDb {
 }
 
 class SqlJsMessageRowIterator implements IterableIterator<MessageRow> {
-  statement: Statement;
+  public statement: Statement;
 
-  constructor(statement: Statement) {
+  public constructor(statement: Statement) {
     this.statement = statement;
   }
 
-  [Symbol.iterator](): IterableIterator<MessageRow> {
+  public [Symbol.iterator](): IterableIterator<MessageRow> {
     return this;
   }
 
-  next(): IteratorResult<MessageRow> {
+  public next(): IteratorResult<MessageRow> {
     if (!this.statement.step()) {
       return { value: undefined, done: true };
     }
@@ -210,7 +214,7 @@ class SqlJsMessageRowIterator implements IterableIterator<MessageRow> {
     };
   }
 
-  return(): IteratorResult<MessageRow> {
+  public return(): IteratorResult<MessageRow> {
     this.statement.freemem();
     this.statement.free();
     return { value: undefined, done: true };
