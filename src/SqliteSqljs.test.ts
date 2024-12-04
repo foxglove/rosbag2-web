@@ -28,6 +28,7 @@ describe("SqliteSqljs", () => {
   });
 
   it("should open a database", async () => {
+    expect.assertions(0); // just needs to run without throwing
     const data = await fileToUint8Array(TALKER_DB);
     const db = new SqliteSqljs(data);
     await db.open();
