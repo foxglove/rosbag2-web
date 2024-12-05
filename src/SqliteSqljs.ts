@@ -29,30 +29,26 @@ type TopicRowArray = [
 type MessageRowArray = [topic_id: number, timestamp: string, data: Uint8Array];
 
 export class SqliteSqljs implements SqliteDb {
-  // eslint-disable-next-line @foxglove/prefer-hash-private
-  private file?: Readonly<File>;
-  // eslint-disable-next-line @foxglove/prefer-hash-private
-  private data?: Readonly<Uint8Array>;
-  // eslint-disable-next-line @foxglove/prefer-hash-private
-  private context?: DbContext;
+  #file?: Readonly<File>;
+  #data?: Readonly<Uint8Array>;
+  #context?: DbContext;
 
-  // eslint-disable-next-line @foxglove/prefer-hash-private
-  private static SqlInitialization?: Promise<SqlJsStatic>;
+  static #SqlInitialization?: Promise<SqlJsStatic>;
 
   public static async Initialize(config?: Partial<EmscriptenModule>): Promise<SqlJsStatic> {
-    if (SqliteSqljs.SqlInitialization) {
-      return await SqliteSqljs.SqlInitialization;
+    if (SqliteSqljs.#SqlInitialization) {
+      return await SqliteSqljs.#SqlInitialization;
     }
 
-    SqliteSqljs.SqlInitialization = initSqlJs(config);
-    return await SqliteSqljs.SqlInitialization;
+    SqliteSqljs.#SqlInitialization = initSqlJs(config);
+    return await SqliteSqljs.#SqlInitialization;
   }
 
   public constructor(data: File | Uint8Array) {
     if (data instanceof File) {
-      this.file = data;
+      this.#file = data;
     } else if (data instanceof Uint8Array) {
-      this.data = data;
+      this.#data = data;
     }
   }
 
@@ -60,10 +56,10 @@ export class SqliteSqljs implements SqliteDb {
     const SQL = await SqliteSqljs.Initialize();
 
     let db: Database;
-    if (this.file) {
-      db = new SQL.Database({ file: this.file });
-    } else if (this.data) {
-      db = new SQL.Database({ data: this.data });
+    if (this.#file) {
+      db = new SQL.Database({ file: this.#file });
+    } else if (this.#data) {
+      db = new SQL.Database({ data: this.#data });
     } else {
       db = new SQL.Database();
     }
@@ -81,29 +77,29 @@ export class SqliteSqljs implements SqliteDb {
       topicNameToId.set(name, bigintId);
     }
 
-    this.context = { db, idToTopic, topicNameToId };
+    this.#context = { db, idToTopic, topicNameToId };
   }
 
   public async close(): Promise<void> {
-    if (this.context != undefined) {
-      this.context.db.close();
-      this.context = undefined;
+    if (this.#context != undefined) {
+      this.#context.db.close();
+      this.#context = undefined;
     }
   }
 
   public async readTopics(): Promise<TopicDefinition[]> {
-    if (this.context == undefined) {
+    if (this.#context == undefined) {
       throw new Error(`Call open() before reading topics`);
     }
-    return Array.from(this.context.idToTopic.values());
+    return Array.from(this.#context.idToTopic.values());
   }
 
   public readMessages(opts: MessageReadOptions = {}): AsyncIterableIterator<RawMessage> {
-    if (this.context == undefined) {
+    if (this.#context == undefined) {
       throw new Error(`Call open() before reading messages`);
     }
-    const db = this.context.db;
-    const topicNameToId = this.context.topicNameToId;
+    const db = this.#context.db;
+    const topicNameToId = this.#context.topicNameToId;
 
     // Build a SQL query and bind parameters
     let args: (string | number)[] = [];
@@ -155,14 +151,14 @@ export class SqliteSqljs implements SqliteDb {
 
     const statement = db.prepare(query, args);
     const dbIterator = new SqlJsMessageRowIterator(statement);
-    return new RawMessageIterator(dbIterator, this.context.idToTopic);
+    return new RawMessageIterator(dbIterator, this.#context.idToTopic);
   }
 
   public async timeRange(): Promise<[min: Time, max: Time]> {
-    if (this.context == undefined) {
+    if (this.#context == undefined) {
       throw new Error(`Call open() before retrieving the time range`);
     }
-    const db = this.context.db;
+    const db = this.#context.db;
 
     const res = db.exec(
       "select cast(min(timestamp) as TEXT), cast(max(timestamp) as TEXT) from messages",
@@ -172,10 +168,10 @@ export class SqliteSqljs implements SqliteDb {
   }
 
   public async messageCounts(): Promise<Map<string, number>> {
-    if (this.context == undefined) {
+    if (this.#context == undefined) {
       throw new Error(`Call open() before retrieving message counts`);
     }
-    const db = this.context.db;
+    const db = this.#context.db;
 
     const rows =
       db.exec(`
