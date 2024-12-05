@@ -54,7 +54,7 @@
     "typescript": "5.7.2"
   },
   "dependencies": {
-    "@foxglove/rosbag2": "github:foxglove/rosbag2#7184cd25ce29d2d551388905d5dc6ca556f07749",
+    "@foxglove/rosbag2": "^6.0.0",
     "@foxglove/sql.js": "^0.0.4"
   },
   "packageManager": "yarn@4.5.3"
